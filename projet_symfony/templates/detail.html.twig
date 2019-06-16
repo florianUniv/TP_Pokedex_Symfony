@@ -1,0 +1,22 @@
+{# templates/detail.html.twig #}
+
+{% extends "parent.html.twig" %}
+
+{% block body %}
+
+<h5 class="card-title">Infos détaillées</h5>
+
+		<ul>
+        <p>Numéro de Pokédex : {{ref_pkm.id}}</p>
+        <p>Nom : {{ref_pkm.nom}}</p>
+        <p>Type1 : {{ref_pkm.Type1.Libelle}}</p>
+        <p>Type2 : {{ref_pkm.Type2.Libelle}}</p>
+        <p>Est une ???</p>
+        <p><a href=\"i">Supprimer</a></p>
+        <ul>
+
+
+
+{% endblock %}
+
+

@@ -1,0 +1,15 @@
+
+<ul>
+    <li><a href="{{ path('home') }}">Home</a></li>
+    <li><a href="{{ path('liste') }}">Liste des Pokemons</a></li>
+    <li><a href="{{ path('new') }}">Ajouter un Pokemon</a></li>
+    
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    	<li><a href="{{ path('mesPokemons') }}">Mes Pokémons</a></li>
+    	<li><a href="{{ path('app_logout') }}">Deconnexion</a></li>
+	{% else %}
+		<li><a href="{{ path('app_login') }}">Connexion</a></li>
+    	<li><a href="{{ path('inscription') }}">Inscription</a></li>
+	{% endif %}
+      
+</ul>

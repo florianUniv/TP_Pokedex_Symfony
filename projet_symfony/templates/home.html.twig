@@ -1,0 +1,36 @@
+{# templates/home.html.twig #}
+
+{% extends "parent.html.twig" %}
+
+{% block body %}
+ 	
+        <h5 class="card-title">Bienvenue sur ton Pokedex</h5>
+
+        <h4 class="card-title"><span class="badge badge-pill badge-primary"> {{nb_pkms}} </span> Pokemon dans ton Pokedex. Ajoutes-en vite de nouveaux !</h4>
+
+        <h4 class="card-title"><span class="badge badge-pill badge-primary"> {{nb_bases}} </span> base(s)</h4>
+
+        <h4 class="card-title"><span class="badge badge-pill badge-primary"> {{nb_evo}} </span> évolution(s)</h4>
+
+        <h4 class="card-title">Nb Pokemon par type </h4>
+
+        <table class="table table-striped">
+            <thead>
+            <th>Type</th>
+            <th>Nb Pokemon</th>
+            </thead>
+            <tbody>
+            
+            {% for type in les_types %}
+                <tr>
+                    <td>{{type[0].libelle}}</td>
+                    <td>{{type[1]}}</td>
+                </tr>
+            {% endfor %}
+            
+            </tbody>
+        </table>
+
+
+{% endblock %}
+

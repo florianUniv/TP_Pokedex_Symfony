@@ -1,0 +1,15 @@
+{# templates/parent.html.twig #}
+
+{{ include("header.html.twig") }}
+{{ include("menu.html.twig") }}
+
+<div class="card" style="width: 80%;margin: auto">
+    <div class="card-body">
+
+        {% block body %}
+        {% endblock %}
+
+    </div>
+</div>
+
+{{ include("footer.html.twig") }}

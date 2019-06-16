@@ -1,0 +1,23 @@
+{# templates/header.html.twig #}
+
+<html>
+<head>
+    <title>TP 1 : Le Pokedex</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css" integrity="sha384-wXznGJNEXNG1NFsbm0ugrLFMQPWswR3lds2VeinahP8N0zJw9VWSopbjv2x7WCvX" crossorigin="anonymous">
+    
+    <!--Pour aligner les champs des formulaires:-->
+    <style>
+        label{
+			width: 150px; 
+		}
+    </style>
+</head>
+<body>
+<h1>Le Pokedex</h1>
+
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <h4>Bienvenue {{ app.user.username }} !</h4>
+    <h5>Argent : {{ app.user.NbPieces }} P</h5>
+{% endif %}
+	

@@ -1,0 +1,42 @@
+{# templates/mesPokemons.html.twig #}
+
+{% extends "parent.html.twig" %}
+
+{% block body %}
+	<h1>Mes Pokémons !</h1>
+
+	<table class="table table-striped">
+            <thead>
+                <th>Nom</th>
+                <th>Sexe</th>
+                <th>Niveau</th>
+                <th>XP</th>
+                <th>à vendre</th>
+                <th>Prix</th>
+                <th>Date dernier entraînement</th>
+
+            </thead>
+            <tbody>
+
+
+	{% for pokemon in pkms %}
+
+		<tr>
+			<td>{{pokemon.RefPokemon.nom}}</td>
+			<td>{{pokemon.sexe}}</td>
+			<td>{{pokemon.niveau}}</td>
+			<td>{{pokemon.xp}}</td>
+			{% if pokemon.AVendre == 0 %}
+				<td>Non</td>
+			{% else %}
+				<td>Oui</td>
+			{% endif %}
+			<td>{{pokemon.prix}}</td>
+			<td>{{ pokemon.DateDernierEntrainement|date('d/m/Y') }}</td>	
+		</tr>
+
+	{% endfor %}
+
+		</tbody>
+	</table>
+{% endblock %}
