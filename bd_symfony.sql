@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  Dim 16 juin 2019 à 12:03
+-- Généré le :  Dim 07 juil. 2019 à 19:44
 -- Version du serveur :  5.7.21
 -- Version de PHP :  7.2.4
 
@@ -77,19 +77,7 @@ CREATE TABLE IF NOT EXISTS `migration_versions` (
 --
 
 INSERT INTO `migration_versions` (`version`, `executed_at`) VALUES
-('20190502181118', '2019-05-02 18:11:38'),
-('20190502183747', '2019-05-02 18:38:11'),
-('20190502184103', '2019-05-02 18:41:22'),
-('20190502185235', '2019-05-02 18:52:47'),
-('20190502185658', '2019-05-02 18:57:22'),
-('20190502190235', '2019-05-02 19:02:40'),
-('20190506181148', '2019-05-06 18:12:22'),
-('20190506182711', '2019-05-06 18:27:40'),
-('20190511144533', '2019-05-11 14:46:02'),
-('20190511151642', '2019-05-11 15:17:01'),
-('20190511152427', '2019-05-11 15:24:35'),
-('20190511155358', '2019-05-11 15:54:14'),
-('20190513090929', '2019-05-13 09:10:03');
+('20190707172243', '2019-07-07 17:22:53');
 
 -- --------------------------------------------------------
 
@@ -111,14 +99,23 @@ CREATE TABLE IF NOT EXISTS `pokemon` (
   PRIMARY KEY (`id`),
   KEY `IDX_62DC90F32922F320` (`ref_pokemon_id`),
   KEY `IDX_62DC90F3A1A01CBE` (`dresseur_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `pokemon`
 --
 
 INSERT INTO `pokemon` (`id`, `ref_pokemon_id`, `dresseur_id`, `sexe`, `xp`, `niveau`, `a_vendre`, `prix`, `date_dernier_entrainement`) VALUES
-(3, 1, 11, 'M', 0, 5, 0, 0, '2019-06-16 11:57:10');
+(3, 1, 11, 'M', 764, 5, 1, 4888, '2019-07-07 18:30:42'),
+(4, 4, 12, 'F', 0, 5, 0, 0, '2019-07-07 14:53:35'),
+(5, 1, 11, 'M', 0, 5, 0, 0, '2019-07-07 18:09:26'),
+(6, 1, 11, 'M', 0, 5, 0, 0, '2019-07-07 18:09:50'),
+(7, 1, 11, 'F', 0, 5, 0, 4500, '2019-07-07 18:10:31'),
+(8, 2, 11, 'M', 0, 5, 0, 0, '2019-07-07 18:11:09'),
+(9, 5, 11, 'F', 0, 5, 0, 0, '2019-07-07 18:14:42'),
+(10, 4, 11, 'M', 0, 5, 0, 0, '2019-07-07 18:27:49'),
+(11, 1, 11, 'F', 0, 5, 1, 5001, '2019-07-07 18:27:57'),
+(12, 2, 11, 'M', 0, 5, 0, 0, '2019-07-07 18:30:42');
 
 -- --------------------------------------------------------
 
@@ -135,26 +132,52 @@ CREATE TABLE IF NOT EXISTS `ref_pokemon` (
   `type_courbe_niveau` varchar(1) COLLATE utf8mb4_unicode_ci NOT NULL,
   `type_1_id` int(11) NOT NULL,
   `type_2_id` int(11) NOT NULL,
+  `terrain_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `IDX_A6C8C32327DC99F2` (`type_1_id`),
-  KEY `IDX_A6C8C3233569361C` (`type_2_id`)
+  KEY `IDX_A6C8C3233569361C` (`type_2_id`),
+  KEY `IDX_A6C8C3238A2D8B41` (`terrain_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `ref_pokemon`
 --
 
-INSERT INTO `ref_pokemon` (`id`, `nom`, `evolution`, `starter`, `type_courbe_niveau`, `type_1_id`, `type_2_id`) VALUES
-(1, 'Bulbizarre', 0, 1, 'P', 10, 11),
-(2, 'Herbizarre', 1, 0, 'P', 10, 11),
-(3, 'Florizarre', 1, 0, 'P', 10, 11),
-(4, 'Salamèche', 0, 1, 'P', 6, 18),
-(5, 'Reptincel', 1, 0, 'P', 6, 18),
-(6, 'Dracaufeu', 1, 0, 'P', 6, 16),
-(7, 'Carapuce', 0, 1, 'P', 4, 18),
-(8, 'Carabaffe', 1, 0, 'P', 4, 18),
-(9, 'Tortank', 1, 0, 'P', 4, 18),
-(10, 'Barpeau', 0, 1, 'P', 6, 7);
+INSERT INTO `ref_pokemon` (`id`, `nom`, `evolution`, `starter`, `type_courbe_niveau`, `type_1_id`, `type_2_id`, `terrain_id`) VALUES
+(1, 'Bulbizarre', 0, 1, 'P', 10, 11, 1),
+(2, 'Herbizarre', 1, 0, 'P', 10, 11, 2),
+(3, 'Florizarre', 1, 0, 'P', 10, 11, 3),
+(4, 'Salamèche', 0, 1, 'P', 6, 18, 4),
+(5, 'Reptincel', 1, 0, 'P', 6, 18, 5),
+(6, 'Dracaufeu', 1, 0, 'P', 6, 16, 1),
+(7, 'Carapuce', 0, 1, 'P', 4, 18, 2),
+(8, 'Carabaffe', 1, 0, 'P', 4, 18, 3),
+(9, 'Tortank', 1, 0, 'P', 4, 18, 4),
+(10, 'Barpeau', 0, 1, 'P', 6, 7, 5);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `terrain`
+--
+
+DROP TABLE IF EXISTS `terrain`;
+CREATE TABLE IF NOT EXISTS `terrain` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nom` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `terrain`
+--
+
+INSERT INTO `terrain` (`id`, `nom`) VALUES
+(1, 'montage'),
+(2, 'plage'),
+(3, 'prairie'),
+(4, 'ville'),
+(5, 'désert');
 
 -- --------------------------------------------------------
 
@@ -175,14 +198,15 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQ_8D93D649E7927C74` (`email`),
   KEY `IDX_8D93D649AD5A66CC` (`starter_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `user`
 --
 
 INSERT INTO `user` (`id`, `starter_id`, `email`, `roles`, `password`, `username`, `is_active`, `nb_pieces`) VALUES
-(11, 1, 'florian@free.fr', '[]', 'florian', 'Florian', 1, 5000);
+(11, 1, 'florian@free.fr', '[]', 'florian', 'Florian', 1, 500),
+(12, 4, 'joe@free.fr', '[]', 'joe', 'joe', 1, 4501);
 
 --
 -- Contraintes pour les tables déchargées
@@ -200,7 +224,8 @@ ALTER TABLE `pokemon`
 --
 ALTER TABLE `ref_pokemon`
   ADD CONSTRAINT `FK_A6C8C32327DC99F2` FOREIGN KEY (`type_1_id`) REFERENCES `elementary_type` (`id`),
-  ADD CONSTRAINT `FK_A6C8C3233569361C` FOREIGN KEY (`type_2_id`) REFERENCES `elementary_type` (`id`);
+  ADD CONSTRAINT `FK_A6C8C3233569361C` FOREIGN KEY (`type_2_id`) REFERENCES `elementary_type` (`id`),
+  ADD CONSTRAINT `FK_A6C8C3238A2D8B41` FOREIGN KEY (`terrain_id`) REFERENCES `terrain` (`id`);
 
 --
 -- Contraintes pour la table `user`

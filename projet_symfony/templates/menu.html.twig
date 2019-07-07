@@ -6,7 +6,9 @@
     
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
     	<li><a href="{{ path('mesPokemons') }}">Mes Pokémons</a></li>
+        <li><a href="{{ path('capturePokemon') }}">Capturer un pokémon</a></li>
     	<li><a href="{{ path('app_logout') }}">Deconnexion</a></li>
+        <li><a href="{{ path('achatPokemon') }}">Acheter des Pokémons</a></li>
 	{% else %}
 		<li><a href="{{ path('app_login') }}">Connexion</a></li>
     	<li><a href="{{ path('inscription') }}">Inscription</a></li>

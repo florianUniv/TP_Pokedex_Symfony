@@ -22,6 +22,7 @@ use App\Entity\RefPokemon;
 use App\Entity\ElementaryType;
 use App\Entity\User;
 use App\Entity\Pokemon;
+use App\Entity\Terrain;
 
 use Doctrine\ORM\EntityRepository;
 
@@ -298,4 +299,221 @@ class DefaultController extends AbstractController
 		return $this->render('mesPokemons.html.twig', array('pkms' => $pkms));
 	}
 
+
+	/**
+	 * @Route("/entrainement/{id}")
+	 */
+	public function entrainer_pkm($id){
+
+		$entityManager = $this->getDoctrine()->getManager();
+    	$pkm = $entityManager->getRepository(Pokemon::class)->find($id);
+		
+    	$dateDernierEntrainement = $pkm->getDateDernierEntrainement(); 
+    	$dateActuelle = new \DateTime('now');
+
+    	$interval = $dateDernierEntrainement->diff($dateActuelle);
+    	
+
+    	if($interval->h<1){
+    		return $this->redirectToRoute('entrainement_pkm_failed');
+    	}
+
+		$xpGagnee =rand(10,30);
+
+		$pkm->setXp($pkm->getXp()+$xpGagnee);
+		$pkm->setDateDernierEntrainement($dateActuelle);
+    	$entityManager->flush();
+		
+		return $this->redirectToRoute('entrainement_pkm_success',['idPkm' => $pkm->getId(), 'xpGagnee' => $xpGagnee]);
+		
+	}
+
+	/**
+	 * @Route("/entrainement_pkm_failed", name="entrainement_pkm_failed")
+	 */
+	public function entrainement_pkm_failed(){
+		return $this->render('entrainement_pkm_failed.html.twig');
+	}
+
+	/**
+	 * @Route("/entrainement_pkm_success/{idPkm}/{xpGagnee}", name="entrainement_pkm_success")
+	 */
+	public function entrainement_pkm_success($idPkm,$xpGagnee){
+
+		$entityManager = $this->getDoctrine()->getManager();
+    	$pkm = $entityManager->getRepository(Pokemon::class)->find($idPkm);
+
+		return $this->render('entrainement_pkm_success.html.twig',array('xpGagnee' => $xpGagnee,'pkm' => $pkm));
+	}
+
+
+	/**
+	 * @Route("/vendre/{id}")
+	 */
+	public function vendre_pkm($id,Request $request){
+
+		$defaultData = ['message' => 'Saisir le prix de vente'];
+		$form = $this->createFormBuilder($defaultData)
+			->add('prix',NumberType::Class, ['required' => true])
+			->add('save', SubmitType::class, ['label' => 'Vendre le Pokémon'])
+			->getForm();
+
+		$form->handleRequest($request);
+
+		if ($form->isSubmitted() && $form->isValid()) {
+
+        	$data = $form->getData();
+        	$prix = $data['prix'];
+
+        	$entityManager = $this->getDoctrine()->getManager();
+    		$pkm = $entityManager->getRepository(Pokemon::class)->find($id);
+
+    		$pkm->setPrix($prix);
+    		$pkm->setAVendre(true);
+    		$entityManager->flush();
+
+    		return $this->render('vendre_pkm_success.html.twig'); 
+
+    	}
+
+		return $this->render('vendre_pkm.html.twig',['form' => $form->createView()]);    	
+	}
+
+	/**
+	 * @Route("/capturePokemon", name="capturePokemon")
+	 */
+	public function capturePokemon(){
+
+		$user = $this->getUser();
+
+		$repository = $this->getDoctrine()->getRepository(Pokemon::class);
+		$pkms = $repository->findBy(
+    		['dresseur' => $user]
+    	);
+
+		return $this->render('capturePokemon.html.twig',array('pkms' => $pkms));
+
+	}
+
+	/**
+	 * @Route("/choixTerrainCapture/{idPkm}", name="choixTerrainCapture")
+	 */
+	public function choixTerrainCapture(Request $request,$idPkm){
+
+		$entityManager = $this->getDoctrine()->getManager();
+    	$pkmChoisi = $entityManager->getRepository(Pokemon::class)->find($idPkm);
+
+		$dateDernierEntrainement = $pkmChoisi->getDateDernierEntrainement(); 
+    	$dateActuelle = new \DateTime('now');
+		$interval = $dateDernierEntrainement->diff($dateActuelle);
+
+		if($interval->h<1){
+    		return $this->render('captureFailed.html.twig');
+    	}
+
+		$defaultData = ['message' => 'Type your message here'];
+    	$form = $this->createFormBuilder($defaultData)
+        ->add('terrain', EntityType::class, ['class' => Terrain::class,
+		'choice_label' => 'nom'])
+    	
+    	->add('save', SubmitType::class, ['label' => 'Capturer un pokémon!'])
+        ->getForm();
+
+        $form->handleRequest($request);
+
+   		if ($form->isSubmitted() && $form->isValid()) {
+        	
+
+        	$terrain = $form->get('terrain')->getData();
+
+        	$entityManager = $this->getDoctrine()->getManager();
+
+        	$pkm = new Pokemon();
+        	
+		 	$nb_random = random_int(0, 1);
+		 	if($nb_random==1){
+		 		$pkm->setSexe('M');
+			}
+			else{
+				$pkm->setSexe('F');
+			}
+
+			$pkm->setXp(0);
+			$pkm->setNiveau(5);
+			$pkm->setAVendre(false);
+			$pkm->setPrix(0);
+			$pkm->setDateDernierEntrainement(new \DateTime('now'));
+			$ref_pkm = $this->getDoctrine()->getRepository(RefPokemon::class)->findOneBy(['terrain' => $terrain]);
+			$pkm->setRefPokemon($ref_pkm);
+			
+			
+			
+			$user = $this->getUser();
+			$pkm->setDresseur($user);
+
+			$pkmChoisi->setDateDernierEntrainement($dateActuelle);
+
+			$entityManager->persist($pkm);
+        	$entityManager->flush();
+
+			return $this->render('captureSuccess.html.twig',array('pkm' => $pkm));
+
+    	}
+
+		return $this->render('choixTerrainCapture.html.twig',['form' => $form->createView()]);    	
+
+	}
+
+	/**
+	 * @Route("/achatPokemon", name="achatPokemon")
+	 */
+	public function achatPokemon(){
+
+		$user = $this->getUser();
+
+		$repository = $this->getDoctrine()->getRepository(Pokemon::class);
+		$pkms = $repository->findBy(
+    		['a_vendre' => true]
+    	);
+
+		return $this->render('achatPokemon.html.twig',array('pkms' => $pkms));
+
+	}
+
+	/**
+	 * @Route("/payerPokemon/{id}", name="payerPokemon")
+	 */
+	public function payerPokemon($id){
+	
+		$user = $this->getUser();
+
+		$entityManager = $this->getDoctrine()->getManager();
+    	$pkm = $entityManager->getRepository(Pokemon::class)->find($id);
+		
+
+		if($pkm->getDresseur()==$user){
+			return $this->render('achatPokemonFailed_sameTrainer.html.twig');
+		}
+
+		if($pkm->getPrix()>$user->getNbPieces()){
+			return $this->render('achatPokemonFailed_argent.html.twig');
+		}
+
+		$user = $entityManager->getRepository(User::class)->find($user->getId());
+		
+		$vendeur = $entityManager->getRepository(User::class)->find($pkm->getDresseur()->getId());
+
+		$user->setNbPieces($user->getNbPieces()-$pkm->getPrix());
+		$vendeur->setNbPieces($vendeur->getNbPieces()+$pkm->getPrix());
+		$pkm->setDresseur($user);
+		$pkm->setAVendre(false);
+		$entityManager->persist($pkm);
+        $entityManager->persist($user);
+        $entityManager->persist($vendeur);
+        $entityManager->flush();
+
+
+		return $this->render('achatPokemonSuccess.html.twig');
+
+	}
 }

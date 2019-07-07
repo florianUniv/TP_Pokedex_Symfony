@@ -32,7 +32,9 @@
 				<td>Oui</td>
 			{% endif %}
 			<td>{{pokemon.prix}}</td>
-			<td>{{ pokemon.DateDernierEntrainement|date('d/m/Y') }}</td>	
+			<td>{{ pokemon.DateDernierEntrainement|date('d/m/Y') }}</td>
+			<td><a href="/projet_symfony/public/index.php/entrainement/{{pokemon.id}}">Entraîner</a></td>	
+			<td><a href="/projet_symfony/public/index.php/vendre/{{pokemon.id}}">Vendre</a></td>
 		</tr>
 
 	{% endfor %}

@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20190502184103 extends AbstractMigration
+final class Version20190707172243 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -22,7 +22,9 @@ final class Version20190502184103 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('CREATE TABLE ref_pokemon (id INT AUTO_INCREMENT NOT NULL, nom VARCHAR(50) NOT NULL, evolution TINYINT(1) NOT NULL, starter TINYINT(1) NOT NULL, type_courbe_niveau VARCHAR(1) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE ref_pokemon ADD terrain_id INT DEFAULT NULL');
+        $this->addSql('ALTER TABLE ref_pokemon ADD CONSTRAINT FK_A6C8C3238A2D8B41 FOREIGN KEY (terrain_id) REFERENCES terrain (id)');
+        $this->addSql('CREATE INDEX IDX_A6C8C3238A2D8B41 ON ref_pokemon (terrain_id)');
     }
 
     public function down(Schema $schema) : void
@@ -30,6 +32,8 @@ final class Version20190502184103 extends AbstractMigration
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
 
-        $this->addSql('DROP TABLE ref_pokemon');
+        $this->addSql('ALTER TABLE ref_pokemon DROP FOREIGN KEY FK_A6C8C3238A2D8B41');
+        $this->addSql('DROP INDEX IDX_A6C8C3238A2D8B41 ON ref_pokemon');
+        $this->addSql('ALTER TABLE ref_pokemon DROP terrain_id');
     }
 }

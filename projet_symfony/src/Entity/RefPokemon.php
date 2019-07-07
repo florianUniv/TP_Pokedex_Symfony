@@ -49,6 +49,12 @@ class RefPokemon
      */
     private $type_2;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Terrain")
+     */
+    private $terrain;
+
+
 
     public function getId(): ?int
     {
@@ -126,5 +132,19 @@ class RefPokemon
 
         return $this;
     }
+
+    public function getTerrain(): ?Terrain
+    {
+        return $this->terrain;
+    }
+
+    public function setTerrain(?Terrain $terrain): self
+    {
+        $this->terrain = $terrain;
+
+        return $this;
+    }
+
+    
 
 }

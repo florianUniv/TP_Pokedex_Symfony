@@ -1,0 +1,39 @@
+{# templates/achatPokemon.html.twig.html.twig #}
+
+{% extends "parent.html.twig" %}
+
+{% block body %}
+
+<h1>Choisissez un pokémon pour vous accompagner :</h1>
+
+<table class="table table-striped">
+            <thead>
+                <th>#</th>
+                <th>Nom</th>
+                <th>Niveau</th>
+                <th>XP</th>
+                <th>Date dernier entraînement</th>
+                <th>Prix</th>
+                <th>Actions</th>
+            </thead>
+            <tbody>
+
+{% for pokemon in pkms %}
+
+	<tr>
+		<td>{{pokemon.id}}</td>	
+		<td>{{pokemon.RefPokemon.nom}}</td>
+		<td>{{pokemon.niveau}}</td>
+		<td>{{pokemon.xp}}</td>
+		<td>{{pokemon.DateDernierEntrainement|date('d/m/Y')}}</td>
+		<td>{{pokemon.prix}}</td>
+		<td> <a href="/projet_symfony/public/index.php/payerPokemon/{{pokemon.id}}">Acheter</td>
+	</tr>
+
+
+{% endfor %}
+	</tbody>
+</table>
+
+
+{% endblock %}
